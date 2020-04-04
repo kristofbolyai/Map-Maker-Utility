@@ -66,21 +66,21 @@ body {
 
 #menu {
   position: fixed; /* Sit on top of the page content */
-	display: none; /* Hidden by default */
+	display: block; /* UwU */
   width: 20%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
 	top: 0; 
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgb(255, 255, 255, 0.1); /* White background with opacity */
+	background-color: rgb(119, 204, 255, .1); /* White background with opacity */
 	z-index: 2; 
 	cursor: pointer; /* Add a pointer on hover */
 }
 
 .menu-text, p a {
 	text-align: left !important;
-	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 16px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
 	width: 100%;
 }
 

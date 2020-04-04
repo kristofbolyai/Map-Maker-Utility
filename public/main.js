@@ -1,12 +1,5 @@
-var Territories = {}
-
-function toggle() {
-    if (document.getElementById("menu").style.display === "block") {
-         document.getElementById("menu").style.display = "none";
-    } else {
-        document.getElementById("menu").style.display = "block";
-    }
-  }
+var Territories = {};
+var Guilds = {};
   
   function initTerrs() {
     var xhttp = new XMLHttpRequest();
@@ -83,48 +76,6 @@ function toggle() {
           "Emorians": "#1b5ff1",
           "House of Sentinels": "#580000"
       }
-  
-      //grabbing options elements
-      let slider = document.getElementById("rate-option");
-      let output = document.getElementById("rate-display");
-      output.innerHTML = slider.value; 
-  
-      let checkboxTerritory = document.getElementById("territory-toggle");
-      let checkboxNames = document.getElementById("territory-names");
-      let checkboxGuilds = document.getElementById("territory-guilds"); 
-  
-      let territoryToggle = true;
-      let territoryNames = false;
-      let guildNames = true;
-  
-      let counter = refresh
-      document.getElementById("countdown").innerHTML = counter;
-  
-      slider.oninput = function() {
-          refresh = this.value;
-            output.innerHTML = this.value;
-      }
-  
-      checkboxTerritory.oninput = function() {
-          territoryToggle = this.checked;
-          
-          checkboxNames.checked = this.checked;
-          checkboxGuilds.checked = this.checked;
-          territoryNames = this.checked;
-          guildNames = this.checked;
-          
-          render();
-      }
-  
-      checkboxNames.oninput = function() {
-          territoryNames = this.checked
-          render();
-      }
-  
-      checkboxGuilds.oninput = function() {
-          guildNames = this.checked
-          render();
-      }
       
       //setting up territories
       fetch("https://raw.githubusercontent.com/DevScyu/Wynn/master/territories.json")
@@ -170,23 +121,6 @@ function toggle() {
                     });
                 }
               });
-      }
-  
-      tick()
-  
-      function tick() {
-          console.log(cdRectangles)
-          setTimeout(_ => {
-              tick()
-          }, 1000)
-  
-          counter += -1;
-          document.getElementById("countdown").innerHTML = counter;
-  
-          Object.keys(cdRectangles).forEach(territory => {
-                  let guild = guildTerritories[territory]["guild"];
-                  // setContent(guildTerritories[territory]["guild"], territory)
-          })
       }
   
       //on zoom end, update map based on zoom
