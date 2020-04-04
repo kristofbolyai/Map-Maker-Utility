@@ -23,7 +23,6 @@
 			<div style="margin-left: 5%; max-height:50%">
 				<p class="menu-text menu-title guild-name">Map Maker Utility</p>
 				<div id="guild-leaderboard" class="menu-text guild-name">
-					<p id="territory" class="menu-text guild-name">Choose a territory to edit</p>
 					<div>
 					<input id="file-button" type="file" hidden="hidden">
 					<button type="button" id="import-button" class="input-button">Import</button>
@@ -33,10 +32,10 @@
 		    </div>
 		    <hr>
 		    <div style="margin-left: 5%">
-		    	<p class="menu-text menu-title guild-name">Options</p>
+		    	<p id="currentTerritory" class="menu-text menu-title guild-name">Choose a territory to edit</p>
 				<div>
-					<span class="menu-text guild-name">Enabled: <input type="checkbox" checked="true" id="territory-toggle"></span><br>
-					<span class="menu-text guild-name">Territory Owner: <select id="guilds"><option value="null">None</option></select></span> <br> 
+					<span style="visibility: hidden;" id="enable-button" class="menu-text guild-name"> (DOES NOTHING) Enabled: <input type="checkbox" checked="true" id="territory-toggle"></span><br>
+					<span style="visibility: hidden;" id="terr-select" class="menu-text guild-name">Territory Owner: <select id="guilds"><option value="null">None</option></select></span> <br> 
 				</div>
 			</div>
 			<hr>
@@ -57,6 +56,14 @@
 					<span class="menu-text guild-name">Remove Guild:</span>
 					<select id="removeguild"><option value="null">-</option></select><br><br>
 					<button class="input-button" onclick="removeguild()">Remove</button>
+				</div>
+			</div>
+			<hr>
+			<div style="margin-left: 5%">
+				<p class="menu-text menu-title guild-name">Commands</p>
+				<div>
+					<button class="input-button" onclick="pullApi()">Pull From Wynn API</button>
+					<p id="api-loading" class="menu-text guild-name"></p>
 				</div>
 			</div>
 		</div>

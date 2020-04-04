@@ -1,5 +1,6 @@
 var Territories = {};
 var Guilds = [];
+var selectedTerritory = null;
 
 $(document).ready(function() {
     alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
@@ -10,7 +11,8 @@ $(document).ready(function() {
     realButton.click();
     realButton.addEventListener('change', importMap, false);
     });
-    run();
+
+    run(); 
   });
 
     class Guild {
@@ -69,6 +71,12 @@ $(document).ready(function() {
 
   function run() {
       initTerrs();
+      // Initializing events
+      var guildSelect = document.getElementById('guilds');
+        guildSelect.addEventListener('change', function() {
+        Territories[selectedTerritory] = guildSelect.value;
+        render();
+    });
       // initializing map
       let bounds = [];
       let images = [];
@@ -108,20 +116,6 @@ $(document).ready(function() {
       //initializing variables
       let rectangles = [];
       let prevZoom = 7;
-      let colors = 
-      {
-          "Blacklisted": "#323232",
-          "Paladins United": "#fff0f5",
-          "Imperial":  "#990033",
-          "Avicia":  "#1010fe",
-          "BuildCraftia": "#09EA2B",
-          "Caeruleum Order": "#012142",
-          "The Simple Ones": "#0fcad6",
-          "Kingdom Foxes": "#ff8800",
-          "Fantasy": "#21c8ec",
-          "Emorians": "#1b5ff1",
-          "House of Sentinels": "#580000"
-      }
       
       //setting up territories
       fetch("https://raw.githubusercontent.com/DevScyu/Wynn/master/territories.json")
@@ -143,6 +137,11 @@ $(document).ready(function() {
                   let rectangle = L.rectangle(bounds, 
                       {color: "rgb(0, 0, 0, 0)", weight: 2})
                   rectangles[territory["name"]] = rectangle;
+                  rectangle.on('click', function() {
+                      selectedTerritory = territory.name;
+                      console.log('Selected ' + selectedTerritory);
+                      reloadMenu();
+                  });
                   rectangle.addTo(map);
                   }	
               }).then(() => {
@@ -151,34 +150,67 @@ $(document).ready(function() {
   
       //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
       function render() {
-          console.log('rendering..')
               Object.keys(Territories).forEach(territory => {
                   let guild = Territories[territory];
                   if (!guild) {
                   rectangles[territory].setStyle({
                       color: 'rgba(255,255,255,1)'
-                  })
+                  });
                 } else {
-                    if (!(Object.keys(colors).includes(guild))) {
-                        colors[guild] = "#000000".replace(/0/g, _ => (~~(Math.random()*16)).toString(16));;
-                    }  
-                    rectangles[territory].setStyle({
-                        color: colors[guild],
-                    });
+                    for (let i in Guilds) {
+                        if (Guilds[i].name === guild) {
+                            rectangles[territory].setStyle({
+                                color: Guilds[i].mapcolor,
+                            });
+                            break;
+                        }
+                    }
                 }
               });
       }
   
       //on zoom end, update map based on zoom
-      map.on('zoomend', _ => {
-          if ((map.getZoom() >= 7 && prevZoom <= 7) || (map.getZoom() <= 7 && prevZoom >= 7)) {
-              for (let territory of Object.keys(rectangles)) {
-                  // setContent(guildTerritories[territory]["guild"], territory);
-              }
-          }
-  
+      map.on('zoomend', () => {
           prevZoom = map.getZoom();
       });
+
+      setInterval(render, 2000)
+  }
+
+  function reloadMenu() {
+      // Change menu to territory
+      var terr = document.getElementById('currentTerritory');
+      console.log(terr.innerText)
+      terr.innerText = selectedTerritory;
+
+      // Show options
+      var enableButton = document.getElementById('enable-button');
+      var terrSelector = document.getElementById('terr-select');
+      enableButton.style.visibility='visible'
+      terrSelector.style.visibility='visible'
+
+      // Show correct options
+      var territoryToggle = document.getElementById('territory-toggle');
+      var guildSelect = document.getElementById('guilds');
+      // Clear guild select
+      var length = guildSelect.options.length;
+      for (i = length-1; i >= 0; i--) {
+        guildSelect.options[i] = null;
+      }
+      // Insert current guild select
+      var currentOwner = Territories[selectedTerritory];
+      var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode('--'));
+        opt.value = null;
+        if (!currentOwner) opt.selected = true;
+        guildSelect.appendChild(opt); 
+      for (let guild of Guilds) {
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(guild.name));
+        opt.value = guild.name;
+        if (guild.name === currentOwner) opt.selected = true;
+        guildSelect.appendChild(opt); 
+      }
   }
   function exportMap() {
     var json = {
@@ -218,4 +250,46 @@ function importMap(evt) {
         }
     }
     reader.readAsText(file)
+}
+
+function pullApi() {
+    var c = confirm('WARNING: This will remove all current data. To save, press the Export button.');
+    if (!c) return;
+    var apiLoading = document.getElementById('api-loading');
+    apiLoading.innerText = 'Loading... (This may take a long time)'
+    fetch('https://api.wynncraft.com/public_api.php?action=territoryList')
+    .then(res => res.json())
+    .then(json => {
+        let territories = json.territories;
+        let guilds = [];
+        let guildPrefixes = {};
+        let int = 0
+        for (let i in territories) {
+            int += 1
+            setTimeout(function() {
+                if (guildPrefixes[territories[i].guild]) {
+                    console.log('quick ' + i)
+                    Territories[i] = guildPrefixes[territories[i].guild]
+                    return;
+                }
+                console.log('long ' + i)
+                fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
+                .then(res => res.json())
+                .then(json => {
+                    if (!json.prefix) console.log('wait')
+                    Territories[i] = json.prefix;
+                    if (!guilds.includes(json.prefix)) guilds.push(json.prefix);  
+                    if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
+                })
+            }, int * 250)
+        }
+        setTimeout(function() {
+            Guilds = [];
+            guilds.forEach(g => {
+            Guilds.push(new Guild(g, "#000000".replace(/0/g, _ => (~~(Math.random()*16)).toString(16))));
+        });
+        apiLoading.innerText = 'Loaded!';
+            alert('Wynn API has finished loading. Feel free to change around colors and territories.')
+        }, int * 250 + 1000)
+    })
 }
