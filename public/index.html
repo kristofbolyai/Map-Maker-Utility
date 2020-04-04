@@ -15,9 +15,9 @@
     <script src="./main.js"></script>
 </head>
 <body onload="run()">
-		<div id="info">
+		<!--<div id="info">
 			<span class="info-text menu-text menu-title guild-name">Press any key for Menu & Leaderboards</span>
-		</div>
+		</div>-->
 		<div id="menu">
 			<div style="margin-left: 5%; max-height:50%">
 				<p class="menu-text menu-title guild-name">Map Maker Utility</p>
@@ -44,7 +44,13 @@
 					<input type="text" id="name" name="name" maxlength=32 placeholder="Name"><br><br>
 					<label class="menu-text input-label" for="color">Guild color:</label>
 					<input type="color" id="color" name="color"><br><br>
-					<input type="submit" value="Add" onclick="addguild()">
+					<button class="input-button" onclick="addguild()">Add</button>
+
+					<br><br>
+
+					<span class="menu-text guild-name">Remove Guild:</span>
+					<select id="removeguild"><option value="null">-</option></select><br><br>
+					<button class="input-button" onclick="removeguild()">Remove</button>
 				</div>
 			</div>
 		</div>

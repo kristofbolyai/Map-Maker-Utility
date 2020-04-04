@@ -1,16 +1,40 @@
 var Territories = {};
-var Guilds = {};
+var Guilds = [];
+
+    class Guild {
+        constructor(name, color) {
+            this.name = name;
+            this.mapcolor = color;
+            console.log(`New guild with the name ${name} and color ${color}`);
+        }
+    }
   
     function addguild()
     {
-        let name = document.getElementById("name");
-        let color = document.getElementById("color");
+        let name = document.getElementById("name").value;
+        let color = document.getElementById("color").value;
         if (name === "")
         {
             alert("No guild name specified!");
             return;
         }
-        
+        Guilds.push(new Guild(name, color));
+        alert("Successfully added the guild!");
+    }
+
+    function removeguild()
+    {
+        let select = document.getElementById("removeguild");
+        if (select.index === 0)
+        {
+            alert("No guild selected!");
+            return;
+        }
+        //Guilds.push(new Guild(name, color));
+        /*TODO:
+        Finish removing logic
+        */
+        alert("Successfully removed the guild!");
     }
 
   function initTerrs() {
@@ -67,13 +91,8 @@ var Guilds = {};
       }
   
       //initializing variables
-      let guildTerritories = [];
       let rectangles = [];
-      let cdRectangles = [];
-      let guilds = [];
-      let leaderboard = [];
       let prevZoom = 7;
-      let refresh = 60;
       let colors = 
       {
           "Blacklisted": "#323232",
@@ -111,7 +130,7 @@ var Guilds = {};
                   rectangles[territory["name"]] = rectangle;
                   rectangle.addTo(map);
                   }	
-              }).then(_ => {
+              }).then(() => {
                     setTimeout(render, 2000);
               });
   
@@ -145,7 +164,5 @@ var Guilds = {};
   
           prevZoom = map.getZoom();
       });
-  
-      document.getElementById("info").style.opacity = 0; 
   }
   
