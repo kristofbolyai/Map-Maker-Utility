@@ -9,12 +9,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="favicon.ico">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
-
+	<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+	
     <script src="./main.js"></script>
 </head>
-<body onload="run()">
+<body>
 		<!--<div id="info">
 			<span class="info-text menu-text menu-title guild-name">Press any key for Menu & Leaderboards</span>
 		</div>-->
@@ -23,6 +24,11 @@
 				<p class="menu-text menu-title guild-name">Map Maker Utility</p>
 				<div id="guild-leaderboard" class="menu-text guild-name">
 					<p id="territory" class="menu-text guild-name">Choose a territory to edit</p>
+					<div>
+					<input id="file-button" type="file" hidden="hidden">
+					<button type="button" id="import-button" class="input-button">Import</button>
+					<button class="input-button" onclick="exportMap()">Export</button>
+					</div>
 				</div>
 		    </div>
 		    <hr>

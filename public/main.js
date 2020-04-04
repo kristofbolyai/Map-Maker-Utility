@@ -1,6 +1,18 @@
 var Territories = {};
 var Guilds = [];
 
+$(document).ready(function() {
+    alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
+    var realButton = document.getElementById('file-button');
+    var importButton = document.getElementById('import-button');
+
+    importButton.addEventListener('click', function() {
+    realButton.click();
+    realButton.addEventListener('change', importMap, false);
+    });
+    run();
+  });
+
     class Guild {
         constructor(name, color) {
             this.name = name;
@@ -12,7 +24,7 @@ var Guilds = [];
     function addguild()
     {
         let name = document.getElementById("name");
-        let color = document.getElementById("color");
+        let color = document.getElementById("color").value;
         if (name.value === "")
         {
             alert("No guild name specified!");
@@ -56,7 +68,6 @@ var Guilds = [];
   }
 
   function run() {
-      alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
       initTerrs();
       // initializing map
       let bounds = [];
@@ -135,7 +146,7 @@ var Guilds = [];
                   rectangle.addTo(map);
                   }	
               }).then(() => {
-                    setTimeout(render, 2000);
+                    render();
               });
   
       //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
@@ -169,4 +180,42 @@ var Guilds = [];
           prevZoom = map.getZoom();
       });
   }
-  
+  function exportMap() {
+    var json = {
+        territories: Territories,
+        guilds: Guilds
+    }
+    console.log(json)
+    var data = JSON.stringify(json);
+    var a = document.createElement("a");
+    var file = new Blob([data], {type: 'application/json'});
+    a.href = URL.createObjectURL(file);
+    a.download = 'Map.json';
+    a.click();
+}
+
+function importMap(evt) {
+    var file = evt.target.files[0];
+    console.log(file)
+
+    var reader = new FileReader();
+    reader.onload = function(file) {
+        var data = JSON.parse(file.target.result);
+        console.log(data);
+        // Check if file is valid
+        if (!data.territories || !data.guilds) return alert('Error: Invalid map save file provided')
+        // Change data in the html
+        Territories = data.territories;
+        Guilds = data.guilds;
+        // Change html
+        for (let i in data.guilds) {
+            let name = data.guilds[i].name;
+            let option = document.createElement("option");
+            let select = document.getElementById("removeguild");
+            option.text = name;
+            select.add(option);
+
+        }
+    }
+    reader.readAsText(file)
+}
