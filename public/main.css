@@ -64,6 +64,10 @@ body {
 
 /* -------------- Menu overlay styling  -------------- */
 
+.input-label {
+  color: white;
+}
+
 #menu {
   position: fixed; /* Sit on top of the page content */
 	display: block; /* UwU */
@@ -100,7 +104,7 @@ p a {
 }
 
 .leaderboard-item {
-	margin-bottom: 5px;				
+	margin-bottom: 5px;
 
 }
 

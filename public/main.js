@@ -1,6 +1,18 @@
 var Territories = {};
 var Guilds = {};
   
+    function addguild()
+    {
+        let name = document.getElementById("name");
+        let color = document.getElementById("color");
+        if (name === "")
+        {
+            alert("No guild name specified!");
+            return;
+        }
+        
+    }
+
   function initTerrs() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

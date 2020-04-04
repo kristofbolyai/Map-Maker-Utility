@@ -38,7 +38,13 @@
 				<p class="menu-text menu-title guild-name">Guild List:</p>
 				<div>
 					<span class="menu-text guild-name">Add Guild:</span>
-					<p class="menu-text">Dev note: add a place to add and remove guilds and set their colors</p>
+					<!--<p class="menu-text">Dev note: add a place to add and remove guilds and set their colors</p>-->
+					<br>
+					<label class="menu-text input-label" for="name">Guild name:</label>
+					<input type="text" id="name" name="name" maxlength=32 placeholder="Name"><br><br>
+					<label class="menu-text input-label" for="color">Guild color:</label>
+					<input type="color" id="color" name="color"><br><br>
+					<input type="submit" value="Add" onclick="addguild()">
 				</div>
 			</div>
 		</div>
