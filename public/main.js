@@ -1,6 +1,7 @@
 var Territories = {};
 var Guilds = [];
 var selectedTerritory = null;
+var actual_JSON;
 
 $(document).ready(function() {
     alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
@@ -11,7 +12,7 @@ $(document).ready(function() {
     realButton.click();
     realButton.addEventListener('change', importMap, false);
     });
-
+    actual_JSON = getData();
     run(); 
   });
 
@@ -19,6 +20,10 @@ $(document).ready(function() {
         constructor(name, color) {
             this.name = name;
             this.mapcolor = color;
+            let option = document.createElement("option");
+            let select = document.getElementById("removeguild");
+            option.text = name;
+            select.add(option);
             console.log(`New guild with the name ${name} and color ${color}`);
         }
     }
@@ -33,10 +38,6 @@ $(document).ready(function() {
             return;
         }
         Guilds.push(new Guild(name.value, color));
-        let option = document.createElement("option");
-        let select = document.getElementById("removeguild");
-        option.text = name.value;
-        select.add(option);
         name.value = "";
         color.value = "#000000";
         alert("Successfully added the guild!");
@@ -263,7 +264,8 @@ function pullApi() {
         let territories = json.territories;
         let guilds = [];
         let guildPrefixes = {};
-        let int = 0
+        let int = 0;
+        let longest = 0;
         for (let i in territories) {
             int += 1
             setTimeout(function() {
@@ -272,16 +274,33 @@ function pullApi() {
                     Territories[i] = guildPrefixes[territories[i].guild]
                     return;
                 }
-                console.log('long ' + i)
-                fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
-                .then(res => res.json())
-                .then(json => {
-                    if (!json.prefix) console.log('wait')
-                    Territories[i] = json.prefix;
-                    if (!guilds.includes(json.prefix)) guilds.push(json.prefix);  
-                    if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
-                })
-            }, int * 250)
+                if (actual_JSON)
+                {
+                    console.log('long ' + i)
+                    for (let j = 0; j < actual_JSON["guild"].length; j++) {
+                        if (actual_JSON["guild"][j] === territories[i].guild)
+                        {
+                            Territories[i] = actual_JSON["tag"][j];
+                            if (!guilds.includes(actual_JSON["tag"][j])) guilds.push(actual_JSON["tag"][j]);  
+                            if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = actual_JSON["tag"][j];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    console.log('longest ' + i)
+                    longest++;
+                    fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
+                    .then(res => res.json())
+                    .then(json => {
+                        //  if (!json.prefix) console.log('wait')
+                        Territories[i] = json.prefix;
+                        if (!guilds.includes(json.prefix)) guilds.push(json.prefix);  
+                        if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
+                    })
+                }
+            }, longest*250 )
         }
         setTimeout(function() {
             Guilds = [];
@@ -290,6 +309,19 @@ function pullApi() {
         });
         apiLoading.innerText = 'Loaded!';
             alert('Wynn API has finished loading. Feel free to change around colors and territories.')
-        }, int * 250 + 1000)
+        }, longest*250 + 1000)
     })
+}
+
+function getData()
+{
+    var Data;
+    function callback (data)
+    {
+        console.log( "success" );
+        Data = data  
+        actual_JSON = data;
+    }
+    var jqxhr = $.getJSON( "guildTags.json", callback);
+    return Data;
 }
