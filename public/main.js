@@ -11,29 +11,33 @@ var Guilds = [];
   
     function addguild()
     {
-        let name = document.getElementById("name").value;
-        let color = document.getElementById("color").value;
-        if (name === "")
+        let name = document.getElementById("name");
+        let color = document.getElementById("color");
+        if (name.value === "")
         {
             alert("No guild name specified!");
             return;
         }
-        Guilds.push(new Guild(name, color));
+        Guilds.push(new Guild(name.value, color));
+        let option = document.createElement("option");
+        let select = document.getElementById("removeguild");
+        option.text = name.value;
+        select.add(option);
+        name.value = "";
+        color.value = "#000000";
         alert("Successfully added the guild!");
     }
 
     function removeguild()
     {
         let select = document.getElementById("removeguild");
-        if (select.index === 0)
+        if (select.selectedIndex === 0)
         {
             alert("No guild selected!");
             return;
         }
-        //Guilds.push(new Guild(name, color));
-        /*TODO:
-        Finish removing logic
-        */
+        Guilds = Guilds.filter(x => (x.name != select.value));
+        select.remove(select.selectedIndex);
         alert("Successfully removed the guild!");
     }
 
