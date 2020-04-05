@@ -193,6 +193,7 @@ $(document).ready(function() {
         Object.keys(Territories).forEach(territory => {
             let guild = Territories[territory];
             if (!guild || guild === "-") {
+            rectangles[territory].unbindTooltip();
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
             });
