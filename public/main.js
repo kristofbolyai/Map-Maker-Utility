@@ -78,6 +78,7 @@ $(document).ready(function() {
         }
         Guilds = Guilds.filter(x => (x.name != select.value));
         select.remove(select.selectedIndex);
+        render();
         alert("Successfully removed the guild!");
     }
 
