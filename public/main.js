@@ -1,5 +1,6 @@
 var Territories = {};
 var Guilds = [];
+let rectangles = [];
 var selectedTerritory = null;
 var actual_JSON;
 
@@ -30,6 +31,9 @@ $(document).ready(function() {
             select2.add(option2);
             console.log(`New guild with the name ${name} and color ${color}`);
         }
+        changecolor (ncolor) {
+            this.mapcolor = ncolor;
+        }
     }
   
     function addguild()
@@ -55,11 +59,11 @@ $(document).ready(function() {
         }
         for (let i in Guilds) {
             if (Guilds[i].name === select.value) {
-                delete Guilds[i];
-                Guilds[i] = new Guild(select.value, color.value)
+                Guilds[i].changecolor(color.value);
                 break;
             }
         }
+        render();
         alert(`Successfully changed ${select.value}'s color to ${color.value}`);
         color.value = '#000000';
     }
@@ -135,7 +139,6 @@ $(document).ready(function() {
       }
   
       //initializing variables
-      let rectangles = [];
       let prevZoom = 7;
       
       //setting up territories
@@ -166,37 +169,37 @@ $(document).ready(function() {
                   rectangle.addTo(map);
                   }	
               }).then(() => {
-                    render();
+                    render(rectangles);
               });
-  
-      //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
-      function render() {
-              Object.keys(Territories).forEach(territory => {
-                  let guild = Territories[territory];
-                  if (!guild) {
-                  rectangles[territory].setStyle({
-                      color: 'rgba(255,255,255,1)'
-                  });
-                } else {
-                    for (let i in Guilds) {
-                        if (Guilds[i].name === guild) {
-                            rectangles[territory].setStyle({
-                                color: Guilds[i].mapcolor,
-                            });
-                            break;
-                        }
-                    }
-                }
-              });
-      }
   
       //on zoom end, update map based on zoom
       map.on('zoomend', () => {
           prevZoom = map.getZoom();
       });
-
+      
       setInterval(render, 2000)
   }
+
+      //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
+      function render() {
+        Object.keys(Territories).forEach(territory => {
+            let guild = Territories[territory];
+            if (!guild) {
+            rectangles[territory].setStyle({
+                color: 'rgba(255,255,255,1)'
+            });
+          } else {
+              for (let i in Guilds) {
+                  if (Guilds[i].name === guild) {
+                      rectangles[territory].setStyle({
+                          color: Guilds[i].mapcolor,
+                      });
+                      break;
+                  }
+              }
+          }
+        });
+    }
 
   function reloadMenu() {
       // Change menu to territory
@@ -281,17 +284,16 @@ function pullApi() {
     var c = confirm('WARNING: This will remove all current data. To save, press the Export button.');
     if (!c) return;
     var apiLoading = document.getElementById('api-loading');
-    apiLoading.innerText = 'Loading... (This may take a long time)'
+    apiLoading.innerText = 'Loading... (This may take a long time)\nFetching the territory list...'
     fetch('https://api.wynncraft.com/public_api.php?action=territoryList')
     .then(res => res.json())
     .then(json => {
         let territories = json.territories;
         let guilds = [];
         let guildPrefixes = {};
-        let int = 0;
         let longest = 0;
         for (let i in territories) {
-            int += 1
+            apiLoading.innerText = 'Loading... (This may take a long time)\nProcessing data...'
             setTimeout(function() {
                 if (guildPrefixes[territories[i].guild]) {
                     console.log('quick ' + i)
@@ -313,6 +315,7 @@ function pullApi() {
                 }
                 else
                 {
+                    apiLoading.innerText = 'Loading... (This may take a long time)\nGuild missing in cache! Fetching Wynn API...'
                     console.log('longest ' + i)
                     longest++;
                     fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
