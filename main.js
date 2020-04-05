@@ -60,11 +60,20 @@ $(document).ready(function() {
         for (let i in Guilds) {
             if (Guilds[i].name === select.value) {
                 Guilds[i].changecolor(color.value);
+                Object.keys(Territories).forEach(territory => {
+                    let guild = Territories[territory];
+                    if (guild === select.value) {
+                        rectangles[territory].unbindTooltip();
+                        rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                        rectangles[territory].setStyle({
+                            color: Guilds[i].mapcolor,
+                        });
+                    }
+                });
                 break;
             }
         }
         select.selectedIndex = 0;
-        render();
         alert(`Successfully changed ${select.value}'s color to ${color.value}`);
         color.value = '#000000';
     }
@@ -77,12 +86,16 @@ $(document).ready(function() {
             return;
         }
         Guilds = Guilds.filter(x => (x.name != select.value));
-        for (let i in Territories) {
-            if (Territories[i] === select.value)
-                Territories[i] = "-";
-        }
+        Object.keys(Territories).forEach(territory => {
+            let guild = Territories[territory];
+            if (guild === select.value) {
+            rectangles[territory].unbindTooltip();
+            rectangles[territory].setStyle({
+                color: 'rgba(255,255,255,1)'
+            });
+            }
+        });
         select.remove(select.selectedIndex);
-        render();
         alert("Successfully removed the guild!");
     }
 
@@ -107,8 +120,27 @@ $(document).ready(function() {
         guildSelect.addEventListener('change', function() {
         Territories[selectedTerritory] = guildSelect.value;
         if (guildSelect.selectedIndex === 0)
+        {
             Territories[selectedTerritory] = "-";
-        render();
+            rectangles[selectedTerritory].unbindTooltip();
+            rectangles[selectedTerritory].setStyle({
+                color: 'rgba(255,255,255,1)'
+            });
+        }
+        else {
+            for (let i = 0; i < Guilds.length; i++) {
+                if (Guilds[i].name === guildSelect.value)
+                {
+                    rectangles[selectedTerritory].unbindTooltip();
+                    rectangles[selectedTerritory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                    rectangles[selectedTerritory].setStyle({
+                        color: Guilds[i].mapcolor,
+                    });
+                    break;
+                }    
+            }
+        }
+
     });
       // initializing map
       let bounds = [];
@@ -177,7 +209,7 @@ $(document).ready(function() {
                   rectangle.addTo(map);
                   }	
               }).then(() => {
-                    render(rectangles);
+                    render();
               });
   
       //on zoom end, update map based on zoom
@@ -185,15 +217,15 @@ $(document).ready(function() {
           prevZoom = map.getZoom();
       });
       
-      setInterval(render, 2000)
+      //setInterval(render, 2000)
   }
 
       //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
       function render() {
+        console.log("RENDERING");
         Object.keys(Territories).forEach(territory => {
             let guild = Territories[territory];
             if (!guild || guild === "-") {
-                
             rectangles[territory].unbindTooltip();
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
@@ -206,6 +238,24 @@ $(document).ready(function() {
                       rectangles[territory].setStyle({
                           color: Guilds[i].mapcolor,
                       });
+                      break;
+                  }
+              }
+          }
+        });
+    }
+
+    function updatetooltip ()
+    {
+        Object.keys(Territories).forEach(territory => {
+            let guild = Territories[territory];
+            if (!guild || guild === "-") {
+            rectangles[territory].unbindTooltip();
+          } else {
+              for (let i in Guilds) {
+                  if (Guilds[i].name === guild) {
+                      rectangles[territory].unbindTooltip();
+                      rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
                       break;
                   }
               }
@@ -336,6 +386,7 @@ function pullApi() {
             Guilds.push(new Guild(g, "#000000".replace(/0/g, _ => (~~(Math.random()*16)).toString(16))));
         });
         apiLoading.innerText = 'Loaded!';
+            render()
             alert('Wynn API has finished loading. Feel free to change around colors and territories.')
         }, longest*250 + 1000)
     })
