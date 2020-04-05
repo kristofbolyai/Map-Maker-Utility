@@ -113,7 +113,7 @@ $(document).ready(function() {
       // initializing map
       let bounds = [];
       let images = [];
-  
+
       const map = L.map("map", {  
           crs: L.CRS.Simple,
           minZoom: 6,
@@ -125,10 +125,10 @@ $(document).ready(function() {
       L.control.zoom({
           position:'topright'
       }).addTo(map);
-  
+
       map.fitBounds([[0, -4], [6, 2]]);
   
-      for (let a = 0; a < 3; a++) {
+      for (let a = 0; a < 4; a++) {
           for (let b = 0; b < 3; b++) {
               bounds.push([[a*2,(2*b)-4], [(a+1)*2, (2*(b+1))-4]])
           }	
@@ -193,6 +193,8 @@ $(document).ready(function() {
         Object.keys(Territories).forEach(territory => {
             let guild = Territories[territory];
             if (!guild || guild === "-") {
+                
+            rectangles[territory].unbindTooltip();
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
             });

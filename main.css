@@ -62,27 +62,50 @@ body {
   border-right-color: transparent !important;
 }
 
+.section-title {
+  font-weight: bolder;
+	font: 18px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+  text-shadow: 0px 0px 3px white, -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-align: left !important;
+  width: 100%;
+}
+
+.add-guild {
+  width: 50%;
+  padding: 8px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #555;
+  outline: none;
+}
+
 /*Button sytling*/
 .input-button {
-	box-shadow:inset 0px 34px 0px -15px #b54b3a;
-	background-color:#a73f2d;
-	border:1px solid #241d13;
-  display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:15px;
-	font-weight:bold;
-	padding:9px 23px;
-	text-decoration:none;
-	text-shadow:0px -1px 0px #7a2a1d;
+  display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 14px/100% Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  color: #d9eef7;
+  border: solid 1px #0076a3;
+  background: #0095cd;
+  background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
 }
 .input-button:hover {
-	background-color:#b34332;
+	text-decoration: none;
 }
 .input-button:active {
-	position:relative;
-	top:1px;
+	position: relative;
+	top: 1px;
 }
 
 /* -------------- Info overlay styling --------------- */
