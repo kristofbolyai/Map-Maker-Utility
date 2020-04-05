@@ -263,19 +263,9 @@ function importMap(evt) {
         if (!data.territories || !data.guilds) return alert('Error: Invalid map save file provided')
         // Change data in the html
         Territories = data.territories;
-        Guilds = data.guilds;
         // Change html
         for (let i in data.guilds) {
-            let name = data.guilds[i].name;
-            let option1 = document.createElement("option");
-            let option2 = document.createElement("option");
-            var select1 = document.getElementById("changeguild");
-            var select2 = document.getElementById("removeguild");
-            option1.text = name;
-            option2.text = name;
-            select1.add(option1);
-            select2.add(option2);
-
+            Guilds.push(new Guild(data.guilds[i].name, data.guilds[i].mapcolor))
         }
     }
     reader.readAsText(file)
@@ -285,7 +275,12 @@ function pullApi() {
     var c = confirm('WARNING: This will remove all current data. To save, press the Export button.');
     if (!c) return;
     var apiLoading = document.getElementById('api-loading');
-    apiLoading.innerText = 'Loading... (This may take a long time)\nFetching the territory list...'
+    apiLoading.innerText = 'Loading... (This may take a long time)\nFetching the territory list...';
+    Territories = {};
+    Guilds = [];
+    $('#changeguild').empty().append('<option selected="selected" value="null">--</option>');
+    $('#removeguild').empty().append('<option selected="selected" value="null">--</option>');
+
     fetch('https://api.wynncraft.com/public_api.php?action=territoryList')
     .then(res => res.json())
     .then(json => {
@@ -309,6 +304,7 @@ function pullApi() {
                         {
                             Territories[i] = actual_JSON["tag"][j];
                             if (!guilds.includes(actual_JSON["tag"][j])) guilds.push(actual_JSON["tag"][j]);  
+                            console.log(guilds)
                             if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = actual_JSON["tag"][j];
                             break;
                         }
@@ -322,9 +318,9 @@ function pullApi() {
                     fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
                     .then(res => res.json())
                     .then(json => {
-                        //  if (!json.prefix) console.log('wait')
                         Territories[i] = json.prefix;
-                        if (!guilds.includes(json.prefix)) guilds.push(json.prefix);  
+                        if (!guilds.includes(json.prefix)) guilds.push(json.prefix); 
+                        console.log(guilds) 
                         if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
                     })
                 }
