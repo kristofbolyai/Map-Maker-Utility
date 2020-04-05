@@ -49,24 +49,30 @@
 			</div>
 			<hr>
 			<div style="margin-left: 5%">
-				<p class="menu-text menu-title guild-name">Guild List:</p>
+				<p class="menu-text menu-title guild-name">Manage Guilds:</p>
 				<div>
-					<span class="menu-text guild-name">Add Guild:</span>
+					<span class="section-title guild-name">Add Guild:</span>
 					<!--<p class="menu-text">Dev note: add a place to add and remove guilds and set their colors</p>-->
 					<br>
-					<label class="menu-text input-label" for="name">Guild name:</label>
-					<input type="text" id="name" name="name" maxlength=32 placeholder="Name"><br><br>
-					<label class="menu-text input-label" for="color">Guild color:</label>
-					<input type="color" id="color" name="color"><br><br>
+					<div>
+						<label class="menu-text input-label" for="name">Guild Prefix:</label>
+						<input class="add-guild" type="text" id="name" name="name" maxlength=3 placeholder="Ex. Fox"><br>
+						<label class="menu-text input-label" for="color">Map color:</label>
+						<input type="color" id="color" name="color">
+					</div>
+					<br>
 					<button class="input-button" onclick="addguild()">Add</button>
-					<hr>
-					<span class="menu-text guild-name">Change Guild Color:</span><br><br>
-					<select id="changeguild"><option value="null">--</option></select>
-					<input type="color" id="changecolor" name="color"><br><br>
+					<br><br>
+					<div class="guild-select"><span class="section-title guild-name">Change Guild Color:</span><br>
+						<select class="guild-select" id="changeguild"><option value="null">--</option></select>
+						<input type="color" id="changecolor" name="color"><br><br>
+					</div>
 					<button class="input-button" onclick="changecolor()">Change</button>
-					<hr>
-					<span class="menu-text guild-name">Remove Guild:</span>
-					<select id="removeguild"><option value="null">--</option></select><br><br>
+					<br><br>
+					<div class="guild-select">
+						<span class="section-title guild-name">Remove Guild:</span>
+						<select id="removeguild"><option value="null">--</option></select><br><br>
+					</div>
 					<button class="input-button" onclick="removeguild()">Remove</button>
 				</div>
 			</div>
