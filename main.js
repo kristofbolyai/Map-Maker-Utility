@@ -77,6 +77,10 @@ $(document).ready(function() {
             return;
         }
         Guilds = Guilds.filter(x => (x.name != select.value));
+        for (let i in Territories) {
+            if (Territories[i] === select.value)
+                Territories[i] = "-";
+        }
         select.remove(select.selectedIndex);
         render();
         alert("Successfully removed the guild!");
@@ -102,6 +106,8 @@ $(document).ready(function() {
       var guildSelect = document.getElementById('guilds');
         guildSelect.addEventListener('change', function() {
         Territories[selectedTerritory] = guildSelect.value;
+        if (guildSelect.selectedIndex === 0)
+            Territories[selectedTerritory] = "-";
         render();
     });
       // initializing map
@@ -186,7 +192,7 @@ $(document).ready(function() {
       function render() {
         Object.keys(Territories).forEach(territory => {
             let guild = Territories[territory];
-            if (!guild) {
+            if (!guild || guild === "-") {
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
             });
