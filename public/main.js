@@ -63,6 +63,7 @@ $(document).ready(function() {
                 break;
             }
         }
+        select.selectedIndex = 0;
         render();
         alert(`Successfully changed ${select.value}'s color to ${color.value}`);
         color.value = '#000000';
