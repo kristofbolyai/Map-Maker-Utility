@@ -205,7 +205,6 @@ $(document).ready(function() {
   function reloadMenu() {
       // Change menu to territory
       var terr = document.getElementById('currentTerritory');
-      console.log(terr.innerText)
       terr.innerText = selectedTerritory;
 
       // Show options
@@ -253,7 +252,6 @@ $(document).ready(function() {
 
 function importMap(evt) {
     var file = evt.target.files[0];
-    console.log(file)
 
     var reader = new FileReader();
     reader.onload = function(file) {
@@ -292,19 +290,16 @@ function pullApi() {
             apiLoading.innerText = 'Loading... (This may take a long time)\nProcessing data...'
             setTimeout(function() {
                 if (guildPrefixes[territories[i].guild]) {
-                    console.log('quick ' + i)
                     Territories[i] = guildPrefixes[territories[i].guild]
                     return;
                 }
                 if (actual_JSON)
                 {
-                    console.log('long ' + i)
                     for (let j = 0; j < actual_JSON["guild"].length; j++) {
                         if (actual_JSON["guild"][j] === territories[i].guild)
                         {
                             Territories[i] = actual_JSON["tag"][j];
                             if (!guilds.includes(actual_JSON["tag"][j])) guilds.push(actual_JSON["tag"][j]);  
-                            console.log(guilds)
                             if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = actual_JSON["tag"][j];
                             break;
                         }
@@ -313,14 +308,12 @@ function pullApi() {
                 else
                 {
                     apiLoading.innerText = 'Loading... (This may take a long time)\nGuild missing in cache! Fetching Wynn API...'
-                    console.log('longest ' + i)
                     longest++;
                     fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
                     .then(res => res.json())
                     .then(json => {
                         Territories[i] = json.prefix;
                         if (!guilds.includes(json.prefix)) guilds.push(json.prefix); 
-                        console.log(guilds) 
                         if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
                     })
                 }
@@ -342,7 +335,7 @@ function getData()
     var Data;
     function callback (data)
     {
-        console.log( "success" );
+        console.log( "Data obtained successfully" );
         Data = data  
         actual_JSON = data;
     }
