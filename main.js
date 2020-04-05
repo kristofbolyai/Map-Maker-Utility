@@ -199,6 +199,8 @@ $(document).ready(function() {
           } else {
               for (let i in Guilds) {
                   if (Guilds[i].name === guild) {
+                      rectangles[territory].unbindTooltip();
+                      rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
                       rectangles[territory].setStyle({
                           color: Guilds[i].mapcolor,
                       });
