@@ -1,2 +1,0 @@
-# Wynncraft territory map 
- 

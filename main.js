@@ -206,7 +206,6 @@ $(document).ready(function() {
   function reloadMenu() {
       // Change menu to territory
       var terr = document.getElementById('currentTerritory');
-      console.log(terr.innerText)
       terr.innerText = selectedTerritory;
 
       // Show options
@@ -254,7 +253,6 @@ $(document).ready(function() {
 
 function importMap(evt) {
     var file = evt.target.files[0];
-    console.log(file)
 
     var reader = new FileReader();
     reader.onload = function(file) {
@@ -264,19 +262,9 @@ function importMap(evt) {
         if (!data.territories || !data.guilds) return alert('Error: Invalid map save file provided')
         // Change data in the html
         Territories = data.territories;
-        Guilds = data.guilds;
         // Change html
         for (let i in data.guilds) {
-            let name = data.guilds[i].name;
-            let option1 = document.createElement("option");
-            let option2 = document.createElement("option");
-            var select1 = document.getElementById("changeguild");
-            var select2 = document.getElementById("removeguild");
-            option1.text = name;
-            option2.text = name;
-            select1.add(option1);
-            select2.add(option2);
-
+            Guilds.push(new Guild(data.guilds[i].name, data.guilds[i].mapcolor))
         }
     }
     reader.readAsText(file)
@@ -286,7 +274,12 @@ function pullApi() {
     var c = confirm('WARNING: This will remove all current data. To save, press the Export button.');
     if (!c) return;
     var apiLoading = document.getElementById('api-loading');
-    apiLoading.innerText = 'Loading... (This may take a long time)\nFetching the territory list...'
+    apiLoading.innerText = 'Loading... (This may take a long time)\nFetching the territory list...';
+    Territories = {};
+    Guilds = [];
+    $('#changeguild').empty().append('<option selected="selected" value="null">--</option>');
+    $('#removeguild').empty().append('<option selected="selected" value="null">--</option>');
+
     fetch('https://api.wynncraft.com/public_api.php?action=territoryList')
     .then(res => res.json())
     .then(json => {
@@ -298,13 +291,11 @@ function pullApi() {
             apiLoading.innerText = 'Loading... (This may take a long time)\nProcessing data...'
             setTimeout(function() {
                 if (guildPrefixes[territories[i].guild]) {
-                    console.log('quick ' + i)
                     Territories[i] = guildPrefixes[territories[i].guild]
                     return;
                 }
                 if (actual_JSON)
                 {
-                    console.log('long ' + i)
                     for (let j = 0; j < actual_JSON["guild"].length; j++) {
                         if (actual_JSON["guild"][j] === territories[i].guild)
                         {
@@ -318,14 +309,12 @@ function pullApi() {
                 else
                 {
                     apiLoading.innerText = 'Loading... (This may take a long time)\nGuild missing in cache! Fetching Wynn API...'
-                    console.log('longest ' + i)
                     longest++;
                     fetch(`https://api.wynncraft.com/public_api.php?action=guildStats&command=${territories[i].guild}`)
                     .then(res => res.json())
                     .then(json => {
-                        //  if (!json.prefix) console.log('wait')
                         Territories[i] = json.prefix;
-                        if (!guilds.includes(json.prefix)) guilds.push(json.prefix);  
+                        if (!guilds.includes(json.prefix)) guilds.push(json.prefix); 
                         if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = json.prefix;
                     })
                 }
@@ -347,7 +336,7 @@ function getData()
     var Data;
     function callback (data)
     {
-        console.log( "success" );
+        console.log( "Data obtained successfully" );
         Data = data  
         actual_JSON = data;
     }
