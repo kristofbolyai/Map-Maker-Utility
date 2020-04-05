@@ -20,10 +20,14 @@ $(document).ready(function() {
         constructor(name, color) {
             this.name = name;
             this.mapcolor = color;
-            let option = document.createElement("option");
-            let select = document.getElementById("guild-list");
-            option.text = name;
-            select.add(option);
+            let option1 = document.createElement("option");
+            let option2 = document.createElement("option");
+            var select1 = document.getElementById("changeguild");
+            var select2 = document.getElementById("removeguild");
+            option1.text = name;
+            option2.text = name;
+            select1.add(option1);
+            select2.add(option2);
             console.log(`New guild with the name ${name} and color ${color}`);
         }
     }
@@ -43,7 +47,7 @@ $(document).ready(function() {
         alert("Successfully added the guild!");
     }
     function changecolor() {
-        let select = document.getElementsByClassName('changeguild')[0];
+        let select = document.getElementById('changeguild');
         let color = document.getElementById("changecolor");
         if (select.selectedIndex === 0) {
             alert("No guild selected!");
@@ -51,7 +55,8 @@ $(document).ready(function() {
         }
         for (let i in Guilds) {
             if (Guilds[i].name === select.value) {
-                Guilds[i].mapcolor = color.value
+                delete Guilds[i];
+                Guilds[i] = new Guild(select.value, color.value)
                 break;
             }
         }
@@ -60,7 +65,7 @@ $(document).ready(function() {
     }
     function removeguild()
     {
-        let select = document.getElementsByClassName("removeguild")[0];
+        let select = document.getElementById("removeguild");
         if (select.selectedIndex === 0)
         {
             alert("No guild selected!");
@@ -258,10 +263,14 @@ function importMap(evt) {
         // Change html
         for (let i in data.guilds) {
             let name = data.guilds[i].name;
-            let option = document.createElement("option");
-            let select = document.getElementById("guild-list");
-            option.text = name;
-            select.add(option);
+            let option1 = document.createElement("option");
+            let option2 = document.createElement("option");
+            var select1 = document.getElementById("changeguild");
+            var select2 = document.getElementById("removeguild");
+            option1.text = name;
+            option2.text = name;
+            select1.add(option1);
+            select2.add(option2);
 
         }
     }
