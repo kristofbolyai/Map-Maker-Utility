@@ -165,10 +165,10 @@ $(document).ready(function() {
         guildSelect.addEventListener('change', function() {
         if (guildSelect.selectedIndex === 0)
         {
-            Object.keys(selectedTerritory).forEach(territory => {
+            Object.values(selectedTerritory).forEach(territory => {
                 Territories[territory] = "-";
-                rectangles[selectedTerritory[territory]].unbindTooltip();
-                rectangles[selectedTerritory[territory]].setStyle({
+                rectangles[territory].unbindTooltip();
+                rectangles[territory].setStyle({
                     color: 'rgba(255,255,255,1)'
                 });
             });
@@ -177,11 +177,11 @@ $(document).ready(function() {
             for (let i = 0; i < Guilds.length; i++) {
                 if (Guilds[i].name === guildSelect.value)
                 {
-                    Object.keys(selectedTerritory).forEach(territory => {
+                    Object.values(selectedTerritory).forEach(territory => {
                         Territories[territory] = guildSelect.value;
-                        rectangles[selectedTerritory[territory]].unbindTooltip();
-                        rectangles[selectedTerritory[territory]].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
-                        rectangles[selectedTerritory[territory]].setStyle({
+                        rectangles[territory].unbindTooltip();
+                        rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                        rectangles[territory].setStyle({
                             color: Guilds[i].mapcolor,
                         });
                     });
@@ -371,7 +371,12 @@ $(document).ready(function() {
         guildSelect.options[i] = null;
       }
       // Insert current guild select
-      var currentOwner = Territories[selectedTerritory];
+      var currentOwner = undefined;
+      try {
+        currentOwner = Territories[selectedTerritory[0]];
+      } catch (error) {
+          
+      }
       var opt = document.createElement('option');
         opt.appendChild(document.createTextNode('--'));
         opt.value = null;
