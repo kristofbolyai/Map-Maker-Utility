@@ -139,6 +139,20 @@ $(document).ready(function() {
         marker = L.marker([lat,lng]).addTo(map);  
         markers.push(marker);
     }
+    if (markers.length == 2)
+    {
+        let first = markers[0].getLatLng();
+        let second = markers[1].getLatLng();
+        let rect = [[first.lat,first.lng],[second.lat,second.lng]];
+        Object.keys(rectangles).forEach(territory => {
+            let bounds = rectangles[territory]._bounds;
+            let current = [[bounds._southWest.lat,bounds._southWest.lng],[bounds._northEast.lat,bounds._northEast.lng]];
+            let overlap = checkRectOverlap(rect,current);
+            if (overlap)
+                selectedTerritory.push(territory);
+        });
+        reloadMenu()
+    }
     console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
     }
 
@@ -147,11 +161,10 @@ $(document).ready(function() {
       // Initializing events
       var guildSelect = document.getElementById('guilds');
         guildSelect.addEventListener('change', function() {
-        Territories[selectedTerritory] = guildSelect.value;
         if (guildSelect.selectedIndex === 0)
         {
             Object.keys(selectedTerritory).forEach(territory => {
-                Territories[selectedTerritory[territory]] = "-";
+                Territories[territory] = "-";
                 rectangles[selectedTerritory[territory]].unbindTooltip();
                 rectangles[selectedTerritory[territory]].setStyle({
                     color: 'rgba(255,255,255,1)'
@@ -163,6 +176,7 @@ $(document).ready(function() {
                 if (Guilds[i].name === guildSelect.value)
                 {
                     Object.keys(selectedTerritory).forEach(territory => {
+                        Territories[territory] = guildSelect.value;
                         rectangles[selectedTerritory[territory]].unbindTooltip();
                         rectangles[selectedTerritory[territory]].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
                         rectangles[selectedTerritory[territory]].setStyle({
@@ -326,6 +340,10 @@ $(document).ready(function() {
       // Change menu to territory
       var terr = document.getElementById('currentTerritory');
       terr.innerText = selectedTerritory;
+      if (selectedTerritory.length > 5)
+      {
+        terr.innerText = "Selected more than 5 territories";
+      }
       if (selectedTerritory.length === 0)
       {
         terr.innerText = "Select 1 or more territory to edit";
@@ -343,7 +361,7 @@ $(document).ready(function() {
       terrSelector.style.visibility='visible'
 
       // Show correct options
-      var territoryToggle = document.getElementById('territory-toggle');
+      //var territoryToggle = document.getElementById('territory-toggle');
       var guildSelect = document.getElementById('guilds');
       // Clear guild select
       var length = guildSelect.options.length;
