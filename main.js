@@ -144,6 +144,7 @@ $(document).ready(function() {
         let first = markers[0].getLatLng();
         let second = markers[1].getLatLng();
         let rect = [[first.lat,first.lng],[second.lat,second.lng]];
+        selectedTerritory = [];
         Object.keys(rectangles).forEach(territory => {
             let bounds = rectangles[territory]._bounds;
             let current = [[bounds._southWest.lat,bounds._southWest.lng],[bounds._northEast.lat,bounds._northEast.lng]];
