@@ -1,8 +1,11 @@
 var Territories = {};
 var Guilds = [];
 let rectangles = [];
-var selectedTerritory = null;
+var selectedTerritory = [];
 var actual_JSON;
+var markers = [];
+var map;
+var rectangleselect = false;
 
 $(document).ready(function() {
     alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
@@ -36,6 +39,12 @@ $(document).ready(function() {
         }
     }
   
+    function removeselections ()
+    {
+        selectedTerritory = [];
+        reloadMenu();
+    }
+
     function addguild()
     {
         let name = document.getElementById("name");
@@ -113,6 +122,26 @@ $(document).ready(function() {
     xhttp.send();
   }
 
+ function onclickevent(e){
+    if (!rectangleselect)
+        return;
+    var coord = e.latlng;
+    var lat = coord.lat;
+    var lng = coord.lng;
+    let length = markers.length;
+    if (length <= 1) {
+        let marker = L.marker([lat,lng]).addTo(map);  
+        markers.push(marker);
+    }
+    else {
+        let marker = markers.reverse().pop()
+        map.removeLayer(marker);
+        marker = L.marker([lat,lng]).addTo(map);  
+        markers.push(marker);
+    }
+    console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
+    }
+
   function run() {
       initTerrs();
       // Initializing events
@@ -121,20 +150,24 @@ $(document).ready(function() {
         Territories[selectedTerritory] = guildSelect.value;
         if (guildSelect.selectedIndex === 0)
         {
-            Territories[selectedTerritory] = "-";
-            rectangles[selectedTerritory].unbindTooltip();
-            rectangles[selectedTerritory].setStyle({
-                color: 'rgba(255,255,255,1)'
+            Object.keys(selectedTerritory).forEach(territory => {
+                Territories[selectedTerritory[territory]] = "-";
+                rectangles[selectedTerritory[territory]].unbindTooltip();
+                rectangles[selectedTerritory[territory]].setStyle({
+                    color: 'rgba(255,255,255,1)'
+                });
             });
         }
         else {
             for (let i = 0; i < Guilds.length; i++) {
                 if (Guilds[i].name === guildSelect.value)
                 {
-                    rectangles[selectedTerritory].unbindTooltip();
-                    rectangles[selectedTerritory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
-                    rectangles[selectedTerritory].setStyle({
-                        color: Guilds[i].mapcolor,
+                    Object.keys(selectedTerritory).forEach(territory => {
+                        rectangles[selectedTerritory[territory]].unbindTooltip();
+                        rectangles[selectedTerritory[territory]].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                        rectangles[selectedTerritory[territory]].setStyle({
+                            color: Guilds[i].mapcolor,
+                        });
                     });
                     break;
                 }    
@@ -146,7 +179,7 @@ $(document).ready(function() {
       let bounds = [];
       let images = [];
 
-      const map = L.map("map", {  
+    map = L.map("map", {  
           crs: L.CRS.Simple,
           minZoom: 6,
           maxZoom: 10,
@@ -154,6 +187,8 @@ $(document).ready(function() {
           zoom: 8
       });	
   
+      map.on('click', onclickevent);
+
       L.control.zoom({
           position:'topright'
       }).addTo(map);
@@ -202,7 +237,12 @@ $(document).ready(function() {
                       {color: "rgb(0, 0, 0, 0)", weight: 2})
                   rectangles[territory["name"]] = rectangle;
                   rectangle.on('click', function() {
-                      selectedTerritory = territory.name;
+                      if (selectedTerritory.includes(territory.name))
+                      {
+                        selectedTerritory = selectedTerritory.filter(index => index != territory.name);
+                      }
+                      else
+                        selectedTerritory.push(territory.name);
                       console.log('Selected ' + selectedTerritory);
                       reloadMenu();
                   });
@@ -245,28 +285,56 @@ $(document).ready(function() {
         });
     }
 
-    function updatetooltip ()
+    function updatetooltip (on)
     {
-        Object.keys(Territories).forEach(territory => {
-            let guild = Territories[territory];
-            if (!guild || guild === "-") {
-            rectangles[territory].unbindTooltip();
-          } else {
-              for (let i in Guilds) {
-                  if (Guilds[i].name === guild) {
-                      rectangles[territory].unbindTooltip();
-                      rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
-                      break;
+        if (on) 
+        {
+            Object.keys(Territories).forEach(territory => {
+                let guild = Territories[territory];
+                if (!guild || guild === "-") {
+                rectangles[territory].unbindTooltip();
+              } else {
+                  for (let i in Guilds) {
+                      if (Guilds[i].name === guild) {
+                          rectangles[territory].unbindTooltip();
+                          rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                          break;
+                      }
                   }
               }
-          }
-        });
+            });
+        }
+        else
+        {
+            Object.keys(Territories).forEach(territory => {
+                let guild = Territories[territory];
+                if (!guild || guild === "-") {
+                rectangles[territory].unbindTooltip();
+              } else {
+                  for (let i in Guilds) {
+                      if (Guilds[i].name === guild) {
+                          rectangles[territory].unbindTooltip();
+                          break;
+                      }
+                  }
+              }
+            });
+        }
     }
 
   function reloadMenu() {
       // Change menu to territory
       var terr = document.getElementById('currentTerritory');
       terr.innerText = selectedTerritory;
+      if (selectedTerritory.length === 0)
+      {
+        terr.innerText = "Select 1 or more territory to edit";
+        var enableButton = document.getElementById('enable-button');
+        var terrSelector = document.getElementById('terr-select');
+        enableButton.style.visibility='hidden'
+        terrSelector.style.visibility='hidden'
+        return;
+      }
 
       // Show options
       var enableButton = document.getElementById('enable-button');
@@ -403,4 +471,26 @@ function getData()
     }
     var jqxhr = $.getJSON( "guildTags.json", callback);
     return Data;
+}
+
+function checkRectOverlap(rect1, rect2) {
+    /*
+     * Each array in parameter is one rectangle
+     * in each array, there is an array showing the co-ordinates of two opposite corners of the rectangle
+     * Example:
+     * [[x1, y1], [x2, y2]], [[x3, y3], [x4, y4]]
+     */
+
+    //Check whether there is an x overlap
+    if ((rect1[0][0] < rect2[0][0] && rect2[0][0] < rect1[1][0]) //Event that x3 is inbetween x1 and x2
+        || (rect1[0][0] < rect2[1][0] && rect2[1][0] < rect1[1][0]) //Event that x4 is inbetween x1 and x2
+        || (rect2[0][0] < rect1[0][0] && rect1[1][0] < rect2[1][0])) {  //Event that x1 and x2 are inbetween x3 and x4
+        //Check whether there is a y overlap using the same procedure
+        if ((rect1[0][1] < rect2[0][1] && rect2[0][1] < rect1[1][1]) //Event that y3 is between y1 and y2
+            || (rect1[0][1] < rect2[1][1] && rect2[1][1] < rect1[1][1]) //Event that y4 is between y1 and y2
+            || (rect2[0][1] < rect1[0][1] && rect1[1][1] < rect2[1][1])) { //Event that y1 and y2 are between y3 and y4
+            return true;
+        }
+    }
+    return false;
 }
