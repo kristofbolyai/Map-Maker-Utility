@@ -239,3 +239,8 @@ p a {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+.menu-section {
+  margin-left: 5%;
+   margin-top: 5%;
+}

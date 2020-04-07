@@ -8,7 +8,7 @@ var map;
 var rectangleselect = false;
 
 $(document).ready(function() {
-    alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of HM Royal Engineers.');
+    alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of the HM Royal Engineers.');
     var realButton = document.getElementById('file-button');
     var importButton = document.getElementById('import-button');
 
