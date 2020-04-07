@@ -141,6 +141,7 @@ $(document).ready(function() {
     }
     if (markers.length == 2)
     {
+        
         let first = markers[0].getLatLng();
         let second = markers[1].getLatLng();
         let rect = [[first.lat,first.lng],[second.lat,second.lng]];
