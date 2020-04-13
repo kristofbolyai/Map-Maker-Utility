@@ -8,6 +8,13 @@ var map;
 var rectangleselect = false;
 
 $(document).ready(function() {
+    // Help popup
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus'
+        })
+      })
+    // Initialize map
     alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of the HM Royal Engineers.');
     var realButton = document.getElementById('file-button');
     var importButton = document.getElementById('import-button');
@@ -158,6 +165,14 @@ $(document).ready(function() {
     console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
     }
 
+    function toggleMenu() {
+        if (document.getElementById("menu").style.display === "block") {
+             document.getElementById("menu").style.display = "none";
+        } else {
+            document.getElementById("menu").style.display = "block";
+        }
+      }
+      
   function run() {
       initTerrs();
       // Initializing events
@@ -277,29 +292,6 @@ $(document).ready(function() {
   }
 
       //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
-      function render() {
-        console.log("RENDERING");
-        Object.keys(Territories).forEach(territory => {
-            let guild = Territories[territory];
-            if (!guild || guild === "-") {
-            rectangles[territory].unbindTooltip();
-            rectangles[territory].setStyle({
-                color: 'rgba(255,255,255,1)'
-            });
-          } else {
-              for (let i in Guilds) {
-                  if (Guilds[i].name === guild) {
-                      rectangles[territory].unbindTooltip();
-                      rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
-                      rectangles[territory].setStyle({
-                          color: Guilds[i].mapcolor,
-                      });
-                      break;
-                  }
-              }
-          }
-        });
-    }
 
     function updatetooltip (on)
     {
@@ -390,6 +382,7 @@ $(document).ready(function() {
         guildSelect.appendChild(opt); 
       }
   }
+  
   function exportMap() {
     var json = {
         territories: Territories,
@@ -420,7 +413,8 @@ function importMap(evt) {
             Guilds.push(new Guild(data.guilds[i].name, data.guilds[i].mapcolor))
         }
     }
-    reader.readAsText(file)
+    reader.readAsText(file);
+    setTimeout(render, 2000);
 }
 
 function pullApi() {
@@ -518,4 +512,28 @@ function checkRectOverlap(rect1, rect2) {
         }
     }
     return false;
+}
+
+function render() {
+    console.log("RENDERING");
+    Object.keys(Territories).forEach(territory => {
+        let guild = Territories[territory];
+        if (!guild || guild === "-") {
+        rectangles[territory].unbindTooltip();
+        rectangles[territory].setStyle({
+            color: 'rgba(255,255,255,1)'
+        });
+      } else {
+          for (let i in Guilds) {
+              if (Guilds[i].name === guild) {
+                  rectangles[territory].unbindTooltip();
+                  rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
+                  rectangles[territory].setStyle({
+                      color: Guilds[i].mapcolor,
+                  });
+                  break;
+              }
+          }
+      }
+    });
 }
