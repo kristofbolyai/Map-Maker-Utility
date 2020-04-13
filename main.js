@@ -14,6 +14,12 @@ $(document).ready(function() {
             trigger: 'focus'
         })
       })
+      // Inittialize controls
+    $('body').bind('keypress', function(e) {
+        if (e.which == 32) {
+           toggleMenu();
+        }
+    })
     // Initialize map
     alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of the HM Royal Engineers.');
     var realButton = document.getElementById('file-button');
