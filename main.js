@@ -6,6 +6,7 @@ var actual_JSON;
 var markers = [];
 var map;
 var rectangleselect = false;
+var visible = true;
 
 $(document).ready(function() {
     // Help popup
@@ -18,6 +19,10 @@ $(document).ready(function() {
     $('body').bind('keypress', function(e) {
         if (e.which == 32) {
            toggleMenu();
+        }
+        else if (e.key == "h") {
+            visible = !visible;
+            changeVisibility();
         }
     })
     // Initialize map
@@ -420,7 +425,8 @@ function importMap(evt) {
         }
     }
     reader.readAsText(file);
-    setTimeout(render, 2000);
+    if (!visible) setTimeout(render, 2000);
+    setTimeout(changeVisibility, 3000);
 }
 
 function pullApi() {
@@ -479,7 +485,8 @@ function pullApi() {
             Guilds.push(new Guild(g, "#000000".replace(/0/g, _ => (~~(Math.random()*16)).toString(16))));
         });
         apiLoading.innerText = 'Loaded!';
-            render()
+            if (!visible) setTimeout(render, 2000);
+            setTimeout(changeVisibility, 3000);
             alert('Wynn API has finished loading. Feel free to change around colors and territories.')
         }, longest*250 + 1000)
     })
@@ -542,4 +549,15 @@ function render() {
           }
       }
     });
+}
+
+function changeVisibility() {
+    if (visible)
+        render()
+    else
+    {
+        Object.keys(Territories).forEach(territory => {
+            rectangles[territory].unbindTooltip();
+    });
+    }
 }
