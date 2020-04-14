@@ -26,7 +26,7 @@ $(document).ready(function() {
         }
     })
     // Initialize map
-    alert('This Map Maker Utility was created by bolyai and Nitrogen2Oxygen of the HM Royal Engineers.');
+    alert('This Map Maker Utility is currently in beta. Please report bugs to @Nitrogen2Oxygen#3206 or @bolyai#8857');
     var realButton = document.getElementById('file-button');
     var importButton = document.getElementById('import-button');
 
@@ -177,7 +177,7 @@ $(document).ready(function() {
     }
 
     function toggleMenu() {
-        if (document.getElementById("menu").style.display === "block") {
+        if (document.getElementById("menu").style.display !== "none") {
              document.getElementById("menu").style.display = "none";
         } else {
             document.getElementById("menu").style.display = "block";
