@@ -65,6 +65,7 @@ $(document).ready(function() {
     {
         selectedTerritory = [];
         reloadMenu();
+        reloadLegend();
     }
 
     function addguild()
@@ -79,6 +80,7 @@ $(document).ready(function() {
         Guilds.push(new Guild(name.value, color.value));
         name.value = "";
         color.value = "#000000";
+        reloadLegend();
         alert("Successfully added the guild!");
     }
     function changecolor() {
@@ -105,6 +107,7 @@ $(document).ready(function() {
             }
         }
         select.selectedIndex = 0;
+        reloadLegend();
         alert(`Successfully changed ${select.value}'s color to ${color.value}`);
         color.value = '#000000';
     }
@@ -127,6 +130,7 @@ $(document).ready(function() {
             }
         });
         select.remove(select.selectedIndex);
+        reloadLegend()
         alert("Successfully removed the guild!");
     }
 
@@ -353,6 +357,32 @@ $(document).ready(function() {
         }
     }
 
+    function reloadLegend() {
+      // Empty out the current list
+      $('#guild-list').empty();
+      // Get data for new list
+      var data = [];
+      var pos = 0;
+      Guilds.forEach(g => {
+          let name = g.name;
+          let color = g.mapcolor
+          let currPos = pos;
+          data[currPos] = [name, color, 0];
+          for (let i in Territories) {
+              let owner = Territories[i];
+              if (owner === name) {
+                data[currPos][2]++;
+              }
+          }
+          pos++;
+      });
+      // Add data to legend
+      data.sort((a, b) => b[2] - a[2]);
+      console.log(data);
+      data.forEach(d => {
+          $('#guild-list').append(`<p>(color: ${d[1]}) ${d[0]} - ${d[2]}`);
+      })
+    }
   function reloadMenu() {
       // Change menu to territory
       var terr = document.getElementById('currentTerritory');
@@ -404,6 +434,7 @@ $(document).ready(function() {
         if (guild.name === currentOwner) opt.selected = true;
         guildSelect.appendChild(opt); 
       }
+      reloadLegend();
   }
   
   function exportMap() {
@@ -561,6 +592,7 @@ function render() {
           }
       }
     });
+    reloadLegend();
 }
 
 function changeVisibility() {
