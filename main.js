@@ -17,13 +17,17 @@ $(document).ready(function() {
       })
       // Inittialize controls
     $('body').bind('keypress', function(e) {
+        if (e.target.id === "name") return;
         if (e.which == 32) {
            toggleMenu();
         }
         else if (e.key == "h") {
             visible = !visible;
             changeVisibility();
+        } else if (e.key == "l") {
+            toggleLegend();
         }
+
     })
     // Initialize map
     alert('This Map Maker Utility is currently in beta. Please report bugs to @Nitrogen2Oxygen#3206 or @bolyai#8857');
@@ -181,6 +185,14 @@ $(document).ready(function() {
              document.getElementById("menu").style.display = "none";
         } else {
             document.getElementById("menu").style.display = "block";
+        }
+      }
+
+      function toggleLegend() {
+        if (document.getElementById("legend").style.display !== "block") {
+             document.getElementById("legend").style.display = "block";
+        } else {
+            document.getElementById("legend").style.display = "none";
         }
       }
       

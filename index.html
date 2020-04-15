@@ -40,6 +40,8 @@
 							Spacebar - Toggles Sidebar
 							<br>
 							H - Toggles guild tag visibility
+							<br>
+							L - Toggle map legend
 						</div>
 						" data-html="true">Help</button>
 						<br>
@@ -55,7 +57,7 @@
 				<div class="menu-section">
 					<p id="currentTerritory" class="menu-text menu-title guild-name">Select 1 or more territory to edit</p>
 					<div>
-						<span style="visibility: hidden;" id="enable-button" class="menu-text guild-name"> (DOES NOTHING) Enabled: <input type="checkbox" checked="true" id="territory-toggle"></span><br>
+						<span style="visibility: hidden;" id="enable-button" class="menu-text guild-name"> (W.I.P.) Enabled: <input type="checkbox" checked="true" id="territory-toggle"></span><br>
 						<span style="visibility: hidden;" id="terr-select" class="menu-text guild-name">Territory Owner: <select id="guilds"><option value="null">None</option></select></span> <br> 
                         <button class="btn btn-primary" onclick="rectangleselect = !rectangleselect">Toggle rectangle selection tool</button><br>
                         <button class="btn btn-primary" onclick="removeselections()">Remove all selections</button>    
@@ -117,5 +119,12 @@
 		</div>
 	</div>
 			<div id="map"></div>
+			<div class="container">
+				<div class="row">
+					<div style="overflow: scroll;" id="legend">
+						
+					</div>
+				</div>
+			</div>
 </body>
 </html>
