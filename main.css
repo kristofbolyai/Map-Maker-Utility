@@ -150,7 +150,7 @@ body {
 
 #legend {
   position: fixed; /* Sit on top of the page content */
-	display: none; /* UwU */
+	display: block; /* UwU */
   width: 20%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
 	top: 0; 
@@ -256,4 +256,14 @@ p a {
 .menu-section {
   margin-left: 5%;
    margin-top: 5%;
+}
+
+.guild-color {
+  display: inline-block;
+  width: .75rem;
+  height: .75rem;
+  border-radius: .75rem;
+  margin-right: .5rem;
+  -webkit-filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
 }

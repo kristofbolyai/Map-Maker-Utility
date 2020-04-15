@@ -106,9 +106,9 @@ $(document).ready(function() {
                 break;
             }
         }
-        select.selectedIndex = 0;
         reloadLegend();
         alert(`Successfully changed ${select.value}'s color to ${color.value}`);
+        select.selectedIndex = 0;
         color.value = '#000000';
     }
     function removeguild()
@@ -127,6 +127,7 @@ $(document).ready(function() {
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
             });
+            Territories[territory] = null;
             }
         });
         select.remove(select.selectedIndex);
@@ -200,10 +201,10 @@ function removeselectionmarkers ()
       }
 
       function toggleLegend() {
-        if (document.getElementById("legend").style.display !== "block") {
-             document.getElementById("legend").style.display = "block";
+        if (document.getElementById("legend").style.display !== "none") {
+             document.getElementById("legend").style.display = "none";
         } else {
-            document.getElementById("legend").style.display = "none";
+            document.getElementById("legend").style.display = "block";
         }
       }
       
@@ -325,8 +326,6 @@ function removeselectionmarkers ()
       //setInterval(render, 2000)
   }
 
-      //rendering territories based on territory location, ownership, and settings. also updates leaderboard div
-
     function updatetooltip (on)
     {
         if (on) 
@@ -387,7 +386,7 @@ function removeselectionmarkers ()
       data.sort((a, b) => b[2] - a[2]);
       console.log(data);
       data.forEach(d => {
-          $('#guild-list').append(`<p>(color: ${d[1]}) ${d[0]} - ${d[2]}`);
+          $('#guild-list').append(`<div><span class="guild-color" style="background-color: ${d[1]}"></span> <span class="menu-text guild-name">${d[0]} - ${d[2]}</span></div>`);
       })
     }
   function reloadMenu() {
