@@ -148,6 +148,13 @@ $(document).ready(function() {
     xhttp.send();
   }
 
+function removeselectionmarkers ()
+{
+    markers.forEach(element => {
+        map.removeLayer(element);
+    });
+}
+
  function onclickevent(e){
     if (!rectangleselect)
         return;
