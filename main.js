@@ -66,7 +66,6 @@ $(document).ready(function() {
     {
         selectedTerritory = [];
         reloadMenu();
-        reloadLegend();
     }
 
     function addguild()
@@ -125,6 +124,7 @@ $(document).ready(function() {
             let guild = Territories[territory];
             if (guild === select.value) {
             rectangles[territory].unbindTooltip();
+            rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: #FFFFFF">FFA</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
             rectangles[territory].setStyle({
                 color: 'rgba(255,255,255,1)'
             });
@@ -188,7 +188,7 @@ function removeselectionmarkers ()
             if (overlap)
                 selectedTerritory.push(territory);
         });
-        reloadMenu()
+        reloadMenu();
     }
     console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
     }
@@ -219,6 +219,7 @@ function removeselectionmarkers ()
             Object.values(selectedTerritory).forEach(territory => {
                 Territories[territory] = "-";
                 rectangles[territory].unbindTooltip();
+                rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: #FFFFFF">FFA</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
                 rectangles[territory].setStyle({
                     color: 'rgba(255,255,255,1)'
                 });
@@ -240,7 +241,7 @@ function removeselectionmarkers ()
                 }    
             }
         }
-
+        reloadLegend();
     });
       // initializing map
       let bounds = [];
@@ -317,6 +318,7 @@ function removeselectionmarkers ()
                   }	
               }).then(() => {
                     render();
+                    reloadLegend();
               });
   
       //on zoom end, update map based on zoom
@@ -327,49 +329,13 @@ function removeselectionmarkers ()
       //setInterval(render, 2000)
   }
 
-    function updatetooltip (on)
-    {
-        if (on) 
-        {
-            Object.keys(Territories).forEach(territory => {
-                let guild = Territories[territory];
-                if (!guild || guild === "-") {
-                rectangles[territory].unbindTooltip();
-              } else {
-                  for (let i in Guilds) {
-                      if (Guilds[i].name === guild) {
-                          rectangles[territory].unbindTooltip();
-                          rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: '+Guilds[i].mapcolor+'">'+Guilds[i].name+'</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
-                          break;
-                      }
-                  }
-              }
-            });
-        }
-        else
-        {
-            Object.keys(Territories).forEach(territory => {
-                let guild = Territories[territory];
-                if (!guild || guild === "-") {
-                rectangles[territory].unbindTooltip();
-              } else {
-                  for (let i in Guilds) {
-                      if (Guilds[i].name === guild) {
-                          rectangles[territory].unbindTooltip();
-                          break;
-                      }
-                  }
-              }
-            });
-        }
-    }
-
     function reloadLegend() {
       // Empty out the current list
       $('#guild-list').empty();
       // Get data for new list
       var data = [];
       var pos = 0;
+      let ownedterrs = 0;
       Guilds.forEach(g => {
           let name = g.name;
           let color = g.mapcolor
@@ -379,6 +345,7 @@ function removeselectionmarkers ()
               let owner = Territories[i];
               if (owner === name) {
                 data[currPos][2]++;
+                ownedterrs++;
               }
           }
           pos++;
@@ -386,6 +353,8 @@ function removeselectionmarkers ()
       // Add data to legend
       data.sort((a, b) => b[2] - a[2]);
       console.log(data);
+      let ffas = territories.length - ownedterrs;
+      $('#guild-list').append(`<div><span class="guild-color" style="background-color: #FFFFFF"></span> <span class="menu-text guild-name">FFA - ${ffas}</span></div>`);
       data.forEach(d => {
           $('#guild-list').append(`<div><span class="guild-color" style="background-color: ${d[1]}"></span> <span class="menu-text guild-name">${d[0]} - ${d[2]}</span></div>`);
       })
@@ -583,6 +552,7 @@ function render() {
         let guild = Territories[territory];
         if (!guild || guild === "-") {
         rectangles[territory].unbindTooltip();
+        rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: #FFFFFF">FFA</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
         rectangles[territory].setStyle({
             color: 'rgba(255,255,255,1)'
         });
@@ -606,5 +576,6 @@ function render() {
 function changeVisibility() {
         Object.keys(Territories).forEach(territory => {
             rectangles[territory].unbindTooltip();
+            rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: #FFFFFF">FFA</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
     });
 }
