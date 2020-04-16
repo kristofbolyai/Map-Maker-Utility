@@ -502,6 +502,7 @@ function pullApi() {
                     Territories[i] = guildPrefixes[territories[i].guild]
                     return;
                 }
+                let found = false;
                 if (actual_JSON)
                 {
                     for (let j = 0; j < actual_JSON["guild"].length; j++) {
@@ -510,11 +511,12 @@ function pullApi() {
                             Territories[i] = actual_JSON["tag"][j];
                             if (!guilds.includes(actual_JSON["tag"][j])) guilds.push(actual_JSON["tag"][j]);  
                             if (!guildPrefixes[territories[i].guild]) guildPrefixes[territories[i].guild] = actual_JSON["tag"][j];
+                            found = true;
                             break;
                         }
                     }
                 }
-                else
+                if (!found)
                 {
                     apiLoading.innerText = 'Loading... (This may take a long time)\nGuild missing in cache! Fetching Wynn API...'
                     longest++;
