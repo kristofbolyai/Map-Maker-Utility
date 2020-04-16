@@ -150,6 +150,7 @@ $(document).ready(function() {
     xhttp.send();
   }
 
+  
 function removeselectionmarkers ()
 {
     markers.forEach(element => {
