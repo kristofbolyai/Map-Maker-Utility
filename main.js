@@ -369,7 +369,7 @@ function removeselectionmarkers ()
       `);
       let terrs = [];
           for (let i in Territories) {
-              if (!Territories[i]) {
+              if (!Territories[i] || Territories[i] === '-') {
                   terrs.push(i);
               }
           }
