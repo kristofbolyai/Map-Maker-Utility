@@ -355,9 +355,54 @@ function removeselectionmarkers ()
       data.sort((a, b) => b[2] - a[2]);
       console.log(data);
       let ffas = territories.length - ownedterrs;
-      $('#guild-list').append(`<div><a href="javascript:void(0)" data-guildname="FFA"><span class="guild-color" style="background-color: #FFFFFF"></span> <span class="menu-text guild-name">FFA - ${ffas}</span></a></div>`);
+      $('#guild-list').append(`
+      <div>
+      <a href="javascript:void(0)" data-target="#FFA-terrs" data-toggle="collapse" aria-expanded="false" aria-controls="FFA-terrs">
+            <span class="guild-color" style="background-color: #FFFFFF"></span>
+            <span class="menu-text guild-name">FFA - ${ffas}</span>
+        </a>
+      </div>
+      <div class="collapse" id="FFA-terrs">
+          <ul id="FFA-terr-list">
+          </ul>
+       </div>
+      `);
+      let terrs = [];
+          for (let i in Territories) {
+              if (!Territories[i]) {
+                  terrs.push(i);
+              }
+          }
+          terrs.sort();
+          for (let terr of terrs) {
+            $(`#FFA-terr-list`).append(`
+            <li><span class="menu-text guild-name">${terr}</span></li>
+            `);
+        }
       data.forEach(d => {
-          $('#guild-list').append(`<div><a href="javascript:void(0)" data-guildname="${d[0]}"><span class="guild-color" style="background-color: ${d[1]}"></span> <span class="menu-text guild-name">${d[0]} - ${d[2]}</span></a></div>`);
+          $('#guild-list').append(`
+          <div>
+            <a href="javascript:void(0)" data-target="#${d[0]}-terrs" data-toggle="collapse" aria-expanded="false" aria-controls="${d[0]}-terrs">
+                <span class="guild-color" style="background-color: ${d[1]}"></span>
+                <span class="menu-text guild-name">${d[0]} - ${d[2]}</span>
+            </a>
+          </div>
+          <div class="collapse" id="${d[0]}-terrs">
+            <ul id="${d[0]}-terr-list">
+            </ul>
+          </div>`);
+          let terrs = [];
+          for (let i in Territories) {
+              if (Territories[i] === d[0]) {
+                  terrs.push(i);
+              }
+          }
+          terrs.sort();
+          for (let terr of terrs) {
+              $(`#${d[0]}-terr-list`).append(`
+              <li><span class="menu-text guild-name">${terr}</span></li>
+              `);
+          }
       })
     }
   function reloadMenu() {
