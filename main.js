@@ -577,6 +577,5 @@ function render() {
 function changeVisibility() {
         Object.keys(Territories).forEach(territory => {
             rectangles[territory].unbindTooltip();
-            rectangles[territory].bindTooltip('<span class="territoryGuildName" style="color: #FFFFFF">FFA</span>',{sticky: true, interactive: false, permanent:true,direction:'center',className:'territoryName',opacity:1})
     });
 }
