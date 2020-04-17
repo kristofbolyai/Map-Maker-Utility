@@ -11,7 +11,7 @@ var visible = true;
 $(document).ready(function() {
     // Help popup
     $(function () {
-        $('[data-toggle="popover"]').popover({
+        $('#help').popover({
             trigger: 'focus'
         })
       })
