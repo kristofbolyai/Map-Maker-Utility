@@ -11,7 +11,7 @@ var visible = true;
 $(document).ready(function() {
     // Help popup
     $(function () {
-        $('[data-toggle="popover"]').popover({
+        $('#help').popover({
             trigger: 'focus'
         })
       })
@@ -355,9 +355,9 @@ function removeselectionmarkers ()
       data.sort((a, b) => b[2] - a[2]);
       console.log(data);
       let ffas = territories.length - ownedterrs;
-      $('#guild-list').append(`<div><span class="guild-color" style="background-color: #FFFFFF"></span> <span class="menu-text guild-name">FFA - ${ffas}</span></div>`);
+      $('#guild-list').append(`<div><a href="javascript:void(0)" data-guildname="FFA"><span class="guild-color" style="background-color: #FFFFFF"></span> <span class="menu-text guild-name">FFA - ${ffas}</span></a></div>`);
       data.forEach(d => {
-          $('#guild-list').append(`<div><span class="guild-color" style="background-color: ${d[1]}"></span> <span class="menu-text guild-name">${d[0]} - ${d[2]}</span></div>`);
+          $('#guild-list').append(`<div><a href="javascript:void(0)" data-guildname="${d[0]}"><span class="guild-color" style="background-color: ${d[1]}"></span> <span class="menu-text guild-name">${d[0]} - ${d[2]}</span></a></div>`);
       })
     }
   function reloadMenu() {
@@ -433,6 +433,10 @@ function importMap(evt) {
 
     var reader = new FileReader();
     reader.onload = function(file) {
+        // Reset values
+        Guilds = [];
+        Territories = [];
+        // Get data
         var data = JSON.parse(file.target.result);
         console.log(data);
         // Check if file is valid
