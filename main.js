@@ -31,7 +31,6 @@ $(document).ready(function() {
 
     })
     // Initialize map
-    alert('This Map Maker Utility is currently in beta. Please report bugs to @Nitrogen2Oxygen#3206 or @bolyai#8857');
     var realButton = document.getElementById('file-button');
     var importButton = document.getElementById('import-button');
 
