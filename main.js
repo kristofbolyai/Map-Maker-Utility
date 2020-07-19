@@ -40,6 +40,7 @@ $(document).ready(function () {
     });
     actual_JSON = getData();
     run();
+    alert("Warning! The wynn map maker url expires on April 5th, 2021. Please stay up to date as we find a workaround.")
 });
 
 class Guild {
